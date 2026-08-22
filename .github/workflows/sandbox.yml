@@ -13,6 +13,13 @@ on:
         description: "Publier sur gh-pages (sinon construction seule)"
         type: boolean
         default: false
+      railsbox-ref:
+        description: >-
+          Version de railsbox employée pour la coquille et le proxy. Sert à
+          éprouver un correctif AVANT sa fusion : c'est la seule façon de voir
+          son effet sur une démonstration réelle, dans un vrai navigateur.
+        type: string
+        default: "main"
 
 jobs:
   sandbox:
@@ -33,3 +40,4 @@ jobs:
       # explicitement la publication publie. La comparaison rend toujours un
       # booléen, y compris sur `push` où le contexte `inputs` est vide.
       publish: ${{ inputs.publish == true }}
+      railsbox-ref: ${{ inputs.railsbox-ref || 'main' }}
