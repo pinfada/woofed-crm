@@ -1,0 +1,365 @@
+/* Inspecteur d'environnement : panneau latéral.
+   Reprend les jetons de la page hôte (terminal sombre, monospace) et ajoute
+   une couleur sémantique distincte de l'accent — l'accent sert aux actions,
+   le sémantique à l'état d'une variable.
+
+   Plancher typographique : 0.75rem (12 px) pour les libellés en capitales,
+   0.8125rem (13 px) dès qu'il s'agit d'un texte à lire ou d'un contrôle à
+   viser. En dessous, ce panneau devient le maillon illisible d'une interface
+   qu'on ne consulte justement que quand quelque chose ne démarre pas. */
+:root {
+  --env-critique: #ff6b6b;
+  --env-externe: #d4a72c;
+  --env-prete: #7ee787;
+  --env-largeur: min(30rem, 100vw);
+}
+
+.env-declencheur {
+  font: inherit;
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.25rem 0.7rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition:
+    border-color 120ms ease,
+    color 120ms ease;
+}
+.env-declencheur:hover,
+.env-declencheur:focus-visible {
+  color: var(--text);
+  border-color: var(--accent);
+}
+/* Le seul changement de couleur ne suffit pas à situer le focus quand on
+   navigue au clavier : il faut un contour, sur chaque cible du panneau. */
+.env-declencheur:focus-visible,
+.env-fermer:focus-visible,
+.env-bouton-ligne:focus-visible,
+.env-action:focus-visible,
+.env-persistance input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.env-declencheur[data-alerte="oui"] {
+  color: var(--env-critique);
+  border-color: var(--env-critique);
+}
+.env-declencheur .compte {
+  font-variant-numeric: tabular-nums;
+  background: var(--env-critique);
+  color: #12060a;
+  border-radius: 999px;
+  padding: 0 0.4rem;
+  font-weight: 700;
+}
+
+.env-voile {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 7, 10, 0.6);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+  z-index: 40;
+}
+.env-voile[data-ouvert="oui"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.env-panneau {
+  position: fixed;
+  top: 0;
+  right: 0;
+  /* dvh : sur mobile, 100vh inclut la barre d'URL rétractable — le bas du
+     panneau (ses boutons d'action) passait sous le pli. */
+  height: 100dvh;
+  width: var(--env-largeur);
+  background: var(--panel);
+  border-left: 1px solid var(--border);
+  box-shadow: -24px 0 48px rgba(0, 0, 0, 0.45);
+  transform: translateX(100%);
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 41;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  min-height: 0;
+}
+.env-panneau[data-ouvert="oui"] {
+  transform: translateX(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .env-panneau,
+  .env-voile {
+    transition: none;
+  }
+}
+
+.env-entete {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 1rem 1.2rem 0.8rem;
+  border-bottom: 1px solid var(--border);
+}
+.env-entete h2 {
+  margin: 0;
+  font-size: 0.9rem;
+  letter-spacing: 0.03em;
+}
+.env-fermer {
+  margin-left: auto;
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  font: inherit;
+  font-size: 1.1rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0.2rem 0.4rem;
+}
+.env-fermer:hover,
+.env-fermer:focus-visible {
+  color: var(--text);
+}
+
+/* Résumé avant détail : ce qui bloque le démarrage se lit en premier. */
+.env-resume {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.85rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.8125rem;
+}
+.env-resume div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.env-resume .valeur {
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.env-resume .bloquantes .valeur {
+  color: var(--env-critique);
+}
+.env-resume .facultatives .valeur {
+  color: var(--env-externe);
+}
+.env-resume .pretes .valeur {
+  color: var(--env-prete);
+}
+.env-resume .libelle {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.75rem;
+}
+
+.env-corps {
+  overflow-y: auto;
+  padding: 0.6rem 1.2rem 1rem;
+  min-height: 0;
+}
+.env-explication {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  margin: 0.6rem 0 1rem;
+}
+.env-vide {
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  padding: 1.5rem 0;
+  text-align: center;
+}
+
+.env-variable {
+  border: 1px solid var(--border);
+  /* Bande de gauche : l'état se lit avant même le texte. */
+  border-left: 3px solid var(--env-critique);
+  border-radius: 6px;
+  padding: 0.7rem 0.8rem;
+  margin-bottom: 0.6rem;
+  display: grid;
+  gap: 0.5rem;
+}
+.env-variable[data-etat="externe"] {
+  border-left-color: var(--env-externe);
+}
+.env-variable[data-etat="prete"] {
+  border-left-color: var(--env-prete);
+}
+
+.env-variable header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.env-nom {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--text);
+  word-break: break-all;
+}
+.env-pastille {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+.env-variable[data-etat="critique"] .env-pastille {
+  color: var(--env-critique);
+}
+.env-variable[data-etat="externe"] .env-pastille {
+  color: var(--env-externe);
+}
+.env-variable[data-etat="prete"] .env-pastille {
+  color: var(--env-prete);
+}
+.env-famille {
+  color: var(--muted);
+  font-size: 0.75rem;
+  margin-left: auto;
+}
+
+.env-saisie {
+  display: flex;
+  gap: 0.4rem;
+}
+.env-saisie input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  font-size: 0.8125rem;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.4rem 0.5rem;
+}
+.env-saisie input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.env-saisie input::placeholder {
+  color: #5c6773;
+}
+.env-bouton-ligne {
+  font: inherit;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0 0.55rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.env-bouton-ligne:hover,
+.env-bouton-ligne:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.env-source {
+  color: #6b7885;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  word-break: break-word;
+  border-top: 1px dashed var(--border);
+  padding-top: 0.4rem;
+}
+
+.env-pied {
+  border-top: 1px solid var(--border);
+  padding: 0.9rem 1.2rem;
+  display: grid;
+  gap: 0.6rem;
+  background: var(--panel);
+}
+.env-actions {
+  display: flex;
+  gap: 0.6rem;
+}
+.env-action {
+  font: inherit;
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  padding: 0.6rem 0.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  flex: 1;
+}
+.env-action:hover:not(:disabled),
+.env-action:focus-visible:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.env-action--primaire {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #06120a;
+  font-weight: 700;
+}
+.env-action--primaire:hover:not(:disabled),
+.env-action--primaire:focus-visible:not(:disabled) {
+  background: #9df3a4;
+  border-color: #9df3a4;
+  color: #06120a;
+}
+.env-action:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+/* Raison du blocage, affichée sous les actions coupées et reliée au bouton
+   par aria-describedby : une infobulle `title` ne s'ouvre qu'à la souris. */
+.env-aide {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.env-persistance {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8125rem;
+  color: var(--muted);
+  cursor: pointer;
+  user-select: none;
+}
+.env-persistance input {
+  accent-color: var(--accent);
+}
+.env-etat {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  min-height: 1.1em;
+  line-height: 1.5;
+}
+.env-etat[data-ton="erreur"] {
+  color: var(--env-critique);
+}
+.env-etat[data-ton="succes"] {
+  color: var(--env-prete);
+}

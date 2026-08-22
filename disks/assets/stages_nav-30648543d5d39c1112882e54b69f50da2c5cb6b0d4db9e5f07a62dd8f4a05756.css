@@ -1,0 +1,16 @@
+/* line 1, app/assets/stylesheets/stages_nav.scss */
+.stage-bar a:first-of-type {
+  border-bottom-left-radius: 0.5rem;
+  border-top-left-radius: 0.5rem;
+}
+
+/* line 7, app/assets/stylesheets/stages_nav.scss */
+.stage-bar a:first-of-type p {
+  padding-left: .625rem;
+}
+
+/* line 12, app/assets/stylesheets/stages_nav.scss */
+.stage-bar a:last-of-type {
+  border-bottom-right-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}

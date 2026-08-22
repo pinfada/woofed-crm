@@ -1,0 +1,667 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- CSP de la page hôte. 'wasm-unsafe-eval' : requis par v86
+         wss://disks.webvm.io : image Debian publique du mode démo.
+         blob:/workers : v86 instancie ses workers internes ainsi. -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self';
+               script-src 'self' 'wasm-unsafe-eval';
+               style-src 'self' 'unsafe-inline';
+               connect-src 'self';
+               worker-src 'self' blob:;
+               img-src 'self' data:;
+               frame-src 'self';
+               object-src 'none';
+               base-uri 'self';
+               form-action 'self'"
+    />
+    <!-- Le sujet de l'onglet est l'APPLICATION, railsbox n'est que le cadre :
+         un visiteur arrive par un lien vers une application, pas vers un
+         émulateur. main.js remplace la première moitié dès que le nom réel est
+         connu ; « railsbox » reste dans le titre, c'est ce que garde le test
+         de bout en bout de la page hôte. -->
+    <title>Application Rails — propulsée par railsbox</title>
+    <style>
+      :root {
+        --bg: #0b0f14;
+        --panel: #11161d;
+        --border: #223041;
+        --text: #d8e1ea;
+        --muted: #8b98a5;
+        --accent: #7ee787;
+        --error: #ff6b6b;
+        --pending: #d4a72c;
+        /* Deux polices, deux rôles. Le monospace partout signalait « outil de
+           développeur » et encadrait une application éditoriale : le visiteur
+           croyait voir un débogueur contenant un site. Le chrome passe donc à
+           la police d'interface du système, et le monospace est rendu à ce qui
+           en vit vraiment — le journal, où l'alignement des colonnes porte du
+           sens. */
+        --police-interface:
+          system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        --police-journal: ui-monospace, "Cascadia Code", Consolas, monospace;
+        /* Taille des contrôles du bandeau. Mesurée à 11,52 px avant ce
+           réglage : sous la limite basse de lisibilité pour du texte
+           d'action, sur un bandeau qu'on ne visite qu'en cas de besoin. */
+        --taille-controle: 0.84rem;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: var(--police-interface);
+        background: var(--bg);
+        color: var(--text);
+        display: grid;
+        /* `minmax(0, 1fr)` et non la colonne implicite `auto` : une colonne
+           `auto` ne descend JAMAIS sous la largeur min-content de ses éléments.
+           Mesuré ici — la bande de badges défilante du bandeau donnait au
+           document 589 px de large sur un écran de 375, et le navigateur mobile
+           dézoomait la page entière plutôt que d'y couper. C'est le même défaut
+           que la largeur minimale de 468 px de l'en-tête d'avant, à un endroit
+           où `flex-wrap` ne peut rien : ici la colonne est bornée à la vue, et
+           ce qui dépasse défile dans sa propre boîte. */
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto 1fr;
+        height: 100vh;
+      }
+      /* --- Bandeau ---------------------------------------------------------
+         Il doit s'effacer devant l'application : fin, neutre, sans accent
+         décoratif. Il enveloppe trois blocs — l'identité, l'état, les
+         actions — et `flex-wrap` est ce qui l'empêche d'imposer une largeur
+         minimale à la page (voir la rupture 640 px). */
+      header {
+        display: flex;
+        flex-wrap: wrap;
+        min-width: 0;
+        align-items: center;
+        gap: 0.5rem 0.85rem;
+        padding: 0.5rem 1.1rem;
+        border-bottom: 1px solid var(--border);
+        background: var(--panel);
+      }
+      .titre-bloc {
+        display: flex;
+        align-items: baseline;
+        gap: 0.55rem;
+        min-width: 0;
+      }
+      /* Le nom de l'application est le sujet de la page. Il peut être long et
+         venir d'un dépôt tiers : l'ellipse est là pour qu'il ne pousse jamais
+         les badges et les contrôles hors de l'écran. */
+      header h1 {
+        margin: 0;
+        font-size: 1.02rem;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .par-railsbox {
+        font-size: 0.7rem;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      /* --- Badges d'état ---------------------------------------------------
+         L'état vit désormais EN TEXTE (`.badge-etat`), pas seulement dans une
+         classe et une puce colorée : un lecteur d'écran annonçait « Service
+         Worker » sans jamais dire s'il fonctionnait. La puce reste, en
+         renfort, pour le coup d'œil. */
+      .badges {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        margin-left: auto;
+        min-width: 0;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 0.35rem;
+        font-size: 0.76rem;
+        padding: 0.22rem 0.55rem;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: var(--bg);
+        white-space: nowrap;
+      }
+      .badge-nom {
+        color: var(--muted);
+      }
+      .badge-etat {
+        color: var(--text);
+      }
+      .badge.pending::before {
+        content: "◌";
+        color: var(--pending);
+      }
+      .badge.ok::before {
+        content: "●";
+        color: var(--accent);
+      }
+      .badge.ok .badge-etat {
+        color: var(--accent);
+      }
+      /* Seule la panne colore la bordure. Quand les quatre badges viraient au
+         vert bordure comprise, la rangée criait au moment précis où elle
+         n'avait plus rien à dire. */
+      .badge.error {
+        border-color: var(--error);
+      }
+      .badge.error::before {
+        content: "✕";
+        color: var(--error);
+      }
+      .badge.error .badge-etat {
+        color: var(--error);
+      }
+
+      /* --- Contrôles -------------------------------------------------------
+         La coquille n'offrait qu'un seul bouton : aucun moyen de replier le
+         journal, de passer l'application en plein écran, ni de redémarrer une
+         VM coincée autrement qu'en rechargeant l'onglet — ce qui refait tout
+         le démarrage (25 à 54 s mesurées). */
+      .controles {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.35rem;
+      }
+      .controle {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font: inherit;
+        font-size: var(--taille-controle);
+        line-height: 1.2;
+        color: var(--text);
+        background: transparent;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 0.34rem 0.62rem;
+        cursor: pointer;
+        transition:
+          border-color 120ms ease,
+          color 120ms ease;
+      }
+      .controle:hover,
+      .controle:focus-visible {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+      .controle:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      .controle:active {
+        background: var(--bg);
+      }
+      .controle .icone {
+        width: 1em;
+        height: 1em;
+        flex: none;
+      }
+      /* Le chevron suit `aria-expanded` : l'attribut qui porte l'état pour les
+         lecteurs d'écran est le même qui le dessine, il ne peut donc pas y
+         avoir de désaccord entre les deux. */
+      #btn-journal .icone {
+        transition: transform 150ms ease;
+      }
+      #btn-journal[aria-expanded="false"] .icone {
+        transform: rotate(180deg);
+      }
+      /* Le déclencheur du tiroir d'environnement est injecté dans #env-slot et
+         habillé par env-drawer.css (0,72 rem, pilule en capitales). Il vit dans
+         MON bandeau, à côté de trois boutons : sans cet alignement, un contrôle
+         sur quatre reste illisible et dépareillé. Sélecteur porté par `header`
+         pour passer devant env-drawer.css, chargé après cette feuille. */
+      header .env-declencheur {
+        font-size: var(--taille-controle);
+        text-transform: none;
+        letter-spacing: 0.01em;
+        border-radius: 6px;
+        padding: 0.34rem 0.62rem;
+        color: var(--text);
+      }
+
+      /* --- Zone principale -------------------------------------------------
+         Le journal occupait 637 px sur 1920 en permanence, sans aucun moyen de
+         le replier : un tiers de l'écran pris à l'application par un affichage
+         que le visiteur ne demande jamais et que le mainteneur ne veut pas
+         perdre. D'où deux états, et un bouton pour passer de l'un à l'autre. */
+      main {
+        display: grid;
+        grid-template-columns: minmax(300px, 32%) 1fr;
+        min-height: 0;
+      }
+      /* Deux règles JUMELLES, volontairement séparées : un moteur sans `:has()`
+         invalide la règle entière qui le contient, y compris les sélecteurs
+         voisins d'une même liste. Fusionnées, le repli par classe tomberait
+         avec elle. Le JS peut donc basculer `aria-expanded` sur #btn-journal,
+         poser `journal-replie` sur <body>, ou les deux. */
+      body:has(#btn-journal[aria-expanded="false"]) main {
+        grid-template-columns: 1fr;
+      }
+      body.journal-replie main {
+        grid-template-columns: 1fr;
+      }
+      body:has(#btn-journal[aria-expanded="false"]) #volet-journal {
+        display: none;
+      }
+      body.journal-replie #volet-journal {
+        display: none;
+      }
+      #volet-journal {
+        display: grid;
+        /* note, bilan, journal : le bilan s'insère entre les deux plutôt que
+           de flotter au-dessus, et le `1fr` reste au journal, seul élément qui
+           doit absorber la place restante. */
+        grid-template-rows: auto auto 1fr;
+        min-height: 0;
+        border-right: 1px solid var(--border);
+      }
+      /* Le journal diffuse l'adresse du client, l'agent utilisateur complet et
+         les identifiants de tâches. Tout est local par construction, mais le
+         visiteur l'ignore et y lit une fuite. La phrase le dit avant qu'il ne
+         se pose la question. */
+      #journal-note {
+        margin: 0;
+        padding: 0.7rem 1.2rem;
+        font-size: 0.75rem;
+        line-height: 1.6;
+        color: var(--muted);
+        border-bottom: 1px dashed var(--border);
+      }
+      #boot-log {
+        margin: 0;
+        padding: 1rem 1.2rem;
+        min-height: 0;
+        overflow-y: auto;
+        font-family: var(--police-journal);
+        font-size: 0.78rem;
+        line-height: 1.55;
+        color: var(--muted);
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      #app-frame {
+        border: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--panel);
+      }
+
+      /* --- Bilan de démarrage ----------------------------------------------
+         Un RÉSULTAT, pas une ligne de journal : ce que le démarrage a coûté,
+         et la part qui revient à railsbox plutôt qu'à l'application.
+         Positionné hors flux à dessein — en élément de grille, il ajouterait
+         une troisième colonne à `main` et déplacerait l'application au moment
+         exact où elle vient enfin de s'afficher.
+         Structure attendue de main.js : <h2> puis une <dl> de couples
+         <dt>libellé</dt><dd>durée</dd>. */
+      #bilan-boot {
+        margin: 0;
+        padding: 0.85rem 1.2rem;
+        background: var(--panel);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        font-size: 0.8rem;
+        line-height: 1.5;
+      }
+      #bilan-boot[hidden] {
+        display: none;
+      }
+      #bilan-boot h2 {
+        margin: 0 0 0.6rem;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      #bilan-boot dl {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 0.3rem 1.2rem;
+        margin: 0;
+      }
+      #bilan-boot dt {
+        color: var(--muted);
+      }
+      #bilan-boot dd {
+        margin: 0;
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+        color: var(--text);
+      }
+
+      /* Diagnostic affiché À LA PLACE de l'application : un visiteur dont le
+         navigateur ne convient pas doit le lire sans fouiller le journal. */
+      #diagnostic {
+        padding: 2rem 2.4rem;
+        overflow-y: auto;
+        background: var(--panel);
+      }
+      #diagnostic[hidden] {
+        display: none;
+      }
+      #diagnostic h2 {
+        margin: 0 0 1rem;
+        font-size: 1.05rem;
+        color: var(--error);
+      }
+      #diagnostic p {
+        margin: 0;
+        max-width: 62ch;
+        font-size: 0.85rem;
+        line-height: 1.7;
+        color: var(--text);
+        white-space: pre-wrap;
+      }
+      /* Ton « info » : un onglet secondaire n'a rien cassé, le rouge de panne
+         y serait un mensonge. */
+      #diagnostic.info h2 {
+        color: var(--accent);
+      }
+      #diagnostic button {
+        margin-top: 1.4rem;
+        padding: 0.55rem 1.1rem;
+        font: inherit;
+        font-size: 0.85rem;
+        color: var(--bg);
+        background: var(--accent);
+        border: 1px solid var(--accent);
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      #diagnostic button:hover:not(:disabled) {
+        filter: brightness(1.12);
+      }
+      #diagnostic button:focus-visible {
+        outline: 2px solid var(--text);
+        outline-offset: 2px;
+      }
+      #diagnostic button:disabled {
+        cursor: progress;
+        opacity: 0.6;
+      }
+      /* Lien de secours des impasses : discret à côté du bouton d'action, mais
+         c'est la seule sortie quand plus aucun geste dans la page n'aide. */
+      #diagnostic a {
+        display: inline-block;
+        margin-top: 1.4rem;
+        font-size: 0.85rem;
+        color: var(--accent);
+      }
+      /* État du démarrage : quelle étape, depuis combien de temps. Mesuré sous
+         bridage processeur réel (`npm run test:bridage`) — de 25 s sans bridage
+         à 54 s sur un processeur bridé 8×, pendant lesquelles la coquille
+         n'offrait qu'un journal gris qui défile, puis un cadre vide sous une
+         rangée de badges déjà tous verts. Barre FIXE et non élément de grille :
+         elle apparaît et disparaît sans jamais déplacer la mise en page de
+         l'application. */
+      #etat-demarrage {
+        position: fixed;
+        inset: auto 0 0 0;
+        z-index: 21;
+        margin: 0;
+        padding: 0.55rem 1.2rem;
+        font-size: 0.78rem;
+        line-height: 1.5;
+        color: var(--text);
+        background: var(--panel);
+        border-top: 2px solid var(--pending);
+        box-shadow: 0 -6px 18px rgb(0 0 0 / 45%);
+      }
+      #etat-demarrage[hidden] {
+        display: none;
+      }
+      #etat-demarrage::before {
+        content: "◌ ";
+        color: var(--pending);
+      }
+      /* Attente au-delà de ce qui a été mesuré : le ton change, la couleur
+         aussi — sans passer au rouge, qui annoncerait un échec qui n'a pas
+         eu lieu. */
+      #etat-demarrage.tres-lente {
+        border-top-color: var(--error);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .controle,
+        #btn-journal .icone {
+          transition: none;
+        }
+      }
+      @media (max-width: 900px) {
+        main {
+          grid-template-columns: 1fr;
+          grid-template-rows: 40% 60%;
+        }
+        body:has(#btn-journal[aria-expanded="false"]) main {
+          grid-template-rows: 1fr;
+        }
+        body.journal-replie main {
+          grid-template-rows: 1fr;
+        }
+        #volet-journal {
+          border-right: 0;
+          border-bottom: 1px solid var(--border);
+        }
+      }
+      /* Téléphones. Deux défauts mesurés en émulation mobile sur la sandbox
+         publiée : l'en-tête en ligne imposait une largeur minimale de 468 px,
+         si bien que tout écran plus étroit dézoomait la page entière (texte à
+         ~10 px réels) ; et le journal de boot mangeait 40 % d'un écran où le
+         visiteur vient voir l'APPLICATION. `dvh` plutôt que `vh` : la barre
+         d'URL mobile rogne autrement le bas de la page.
+         Le bandeau y gagne trois contrôles : ils tiennent parce que chaque
+         bloc prend une ligne entière, que deux boutons se réduisent à leur
+         icône, et que les badges défilent DANS leur bande au lieu de la
+         faire grandir. Budget à tenir : moins de 140 px de haut, garde du
+         test de bout en bout `coquille-mobile`. */
+      @media (max-width: 640px) {
+        body {
+          height: 100dvh;
+        }
+        header {
+          gap: 0.45rem 0.9rem;
+          padding: 0.55rem 0.9rem;
+        }
+        header h1 {
+          font-size: 0.92rem;
+        }
+        .titre-bloc,
+        .controles {
+          width: 100%;
+        }
+        .controles {
+          order: 2;
+        }
+        /* Bande défilante et non repliable : deux lignes de badges coûtaient
+           plus cher, en hauteur, que les trois contrôles réunis. L'état reste
+           écrit en toutes lettres, ce que masquerait toute abréviation. */
+        .badges {
+          order: 3;
+          width: 100%;
+          margin-left: 0;
+          flex-wrap: nowrap;
+          overflow-x: auto;
+          scrollbar-width: none;
+        }
+        .badges::-webkit-scrollbar {
+          display: none;
+        }
+        .badge {
+          font-size: 0.72rem;
+          padding: 0.2rem 0.5rem;
+        }
+        /* Deux boutons perdent leur libellé visible — pas leur nom accessible.
+           Le repli du journal, lui, garde le sien : c'est le seul que le
+           visiteur cherche. */
+        #btn-plein-ecran .etiquette,
+        #btn-redemarrer .etiquette {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          margin: -1px;
+          padding: 0;
+          overflow: hidden;
+          clip-path: inset(50%);
+          white-space: nowrap;
+        }
+        /* Le journal reste une bande minoritaire tant qu'il est déplié : sur un
+           téléphone, l'état juste est REPLIÉ (à main.js de le poser au
+           démarrage), et ce reste garantit que l'application domine même si
+           personne ne le replie. */
+        main {
+          grid-template-rows: minmax(0, 26%) minmax(0, 74%);
+        }
+        body:has(#btn-journal[aria-expanded="false"]) main {
+          grid-template-rows: 1fr;
+        }
+        body.journal-replie main {
+          grid-template-rows: 1fr;
+        }
+        #journal-note {
+          padding: 0.5rem 0.8rem;
+          font-size: 0.7rem;
+        }
+        #boot-log {
+          font-size: 0.72rem;
+          padding: 0.6rem 0.8rem;
+        }
+        #bilan-boot {
+          padding: 0.7rem 0.8rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="titre-bloc">
+        <!-- main.js y écrit le nom réel de l'application détectée. -->
+        <h1 id="titre-app">Application Rails</h1>
+        <span class="par-railsbox">propulsé par railsbox</span>
+      </div>
+      <div class="badges">
+        <span class="badge pending" id="badge-sw" role="status">
+          <span class="badge-nom">Service Worker</span><span class="badge-etat">en attente</span>
+        </span>
+        <span class="badge pending" id="badge-coi" role="status">
+          <span class="badge-nom">Isolation COI</span><span class="badge-etat">en attente</span>
+        </span>
+        <span class="badge pending" id="badge-vm" role="status">
+          <span class="badge-nom">VM v86</span><span class="badge-etat">en attente</span>
+        </span>
+        <span class="badge pending" id="badge-http" role="status">
+          <span class="badge-nom">Serveur HTTP</span><span class="badge-etat">en attente</span>
+        </span>
+      </div>
+      <div class="controles">
+        <button
+          class="controle"
+          id="btn-journal"
+          type="button"
+          aria-expanded="true"
+          aria-controls="volet-journal"
+        >
+          <!-- Pas de xmlns : en HTML l'analyseur place déjà le SVG dans son
+               espace de noms, et l'URL de la spécification serait la seule
+               origine externe écrite dans la coquille. -->
+          <svg class="icone" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <path
+              d="M10 3 4.5 8 10 13"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span class="etiquette">Journal</span>
+        </button>
+        <button
+          class="controle"
+          id="btn-plein-ecran"
+          type="button"
+          title="Application en plein écran"
+        >
+          <svg class="icone" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <path
+              d="M6 2H2v4m8-4h4v4M6 14H2v-4m8 4h4v-4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span class="etiquette">Plein écran</span>
+        </button>
+        <button
+          class="controle"
+          id="btn-redemarrer"
+          type="button"
+          title="Redémarrer la machine virtuelle"
+        >
+          <svg class="icone" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <path
+              d="M13.5 8A5.5 5.5 0 1 1 11.6 3.8M13.5 2v3.8H9.7"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span class="etiquette">Redémarrer</span>
+        </button>
+        <!-- Le tiroir d'environnement s'injecte ici (env-drawer.js). -->
+        <span id="env-slot"></span>
+      </div>
+    </header>
+    <main>
+      <section id="volet-journal" aria-label="Journal de démarrage">
+        <p id="journal-note">
+          Tout ce qui suit s'exécute dans cet onglet : la machine virtuelle, le serveur et
+          l'application. Les adresses, en-têtes et identifiants de tâches qui y défilent sont ceux
+          de votre propre navigateur — rien de tout cela n'est envoyé à un serveur.
+        </p>
+        <!-- Rempli par main.js à la fin du démarrage : durée totale, part de
+             railsbox, part de l'application. Il vit DANS le volet parce qu'il
+             s'adresse au même lecteur que le journal — le mainteneur — et
+             qu'il disparaît donc avec lui. En position fixe, il masquait les
+             logs journal ouvert, puis l'application journal replié : un
+             encadré de diagnostic posé par-dessus la démonstration est
+             exactement ce que cette refonte cherchait à supprimer. -->
+        <section id="bilan-boot" hidden></section>
+        <pre id="boot-log"></pre>
+      </section>
+      <!-- sandbox : l'application émulée ne doit pas pouvoir naviguer la page
+           hôte ni ouvrir de contexte hors contrôle. allow-same-origin est
+           nécessaire (cookies de session + interception Service Worker). -->
+      <iframe
+        id="app-frame"
+        title="Application Rails"
+        src="about:blank"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-downloads"
+      ></iframe>
+      <!-- Rempli par main.js quand la sandbox ne peut pas démarrer ; remplace
+           alors l'iframe, qui resterait vide et muette. -->
+      <section id="diagnostic" role="alert" aria-live="polite" hidden></section>
+    </main>
+    <!-- Étape de démarrage en cours et secondes écoulées. Rempli par main.js
+         via public/shared/progression-demarrage.js, retiré dès que la première
+         page de l'application est RENDUE — pas dès qu'elle est demandée. -->
+    <p id="etat-demarrage" role="status" aria-live="polite" hidden></p>
+    <link rel="stylesheet" href="env-drawer.css" />
+    <script type="module" src="main.js"></script>
+  </body>
+</html>

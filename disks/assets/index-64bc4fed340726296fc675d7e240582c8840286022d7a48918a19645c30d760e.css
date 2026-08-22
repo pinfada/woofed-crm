@@ -1,0 +1,1237 @@
+@charset "UTF-8";
+@import url(/woofed-crm/app/assets/application.tailwind-bd090466411d83fd352e64c7ea8e8bdb523b5c49fe8dcd422e6f9078a70ea222.css);
+/*
+Trix 1.3.5
+Copyright © 2024 37signals, LLC
+http://trix-editor.org/*/
+/* line 6, node_modules/trix/dist/trix.css */
+trix-editor {
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  margin: 0;
+  padding: 0.4em 0.6em;
+  min-height: 5em;
+  outline: none;
+}
+
+/* line 13, node_modules/trix/dist/trix.css */
+trix-toolbar * {
+  box-sizing: border-box;
+}
+
+/* line 15, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button-row {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  overflow-x: auto;
+}
+
+/* line 20, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button-group {
+  display: flex;
+  margin-bottom: 10px;
+  border: 1px solid #bbb;
+  border-top-color: #ccc;
+  border-bottom-color: #888;
+  border-radius: 3px;
+}
+
+/* line 27, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button-group:not(:first-child) {
+  margin-left: 1.5vw;
+}
+
+@media (max-device-width: 768px) {
+  /* line 30, node_modules/trix/dist/trix.css */
+  trix-toolbar .trix-button-group:not(:first-child) {
+    margin-left: 0;
+  }
+}
+
+/* line 32, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button-group-spacer {
+  flex-grow: 1;
+}
+
+@media (max-device-width: 768px) {
+  /* line 35, node_modules/trix/dist/trix.css */
+  trix-toolbar .trix-button-group-spacer {
+    display: none;
+  }
+}
+
+/* line 37, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button {
+  position: relative;
+  float: left;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.75em;
+  font-weight: 600;
+  white-space: nowrap;
+  padding: 0 0.5em;
+  margin: 0;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  border-radius: 0;
+  background: transparent;
+}
+
+/* line 51, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button:not(:first-child) {
+  border-left: 1px solid #ccc;
+}
+
+/* line 53, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button.trix-active {
+  background: #cbeefa;
+  color: black;
+}
+
+/* line 56, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button:not(:disabled) {
+  cursor: pointer;
+}
+
+/* line 58, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button:disabled {
+  color: rgba(0, 0, 0, 0.125);
+}
+
+@media (max-device-width: 768px) {
+  /* line 61, node_modules/trix/dist/trix.css */
+  trix-toolbar .trix-button {
+    letter-spacing: -0.01em;
+    padding: 0 0.3em;
+  }
+}
+
+/* line 64, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button--icon {
+  font-size: inherit;
+  width: 2.6em;
+  height: 1.6em;
+  max-width: calc(0.8em + 4vw);
+  text-indent: -9999px;
+}
+
+@media (max-device-width: 768px) {
+  /* line 71, node_modules/trix/dist/trix.css */
+  trix-toolbar .trix-button--icon {
+    height: 2em;
+    max-width: calc(0.8em + 3.5vw);
+  }
+}
+
+/* line 74, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button--icon::before {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0.6;
+  content: "";
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+@media (max-device-width: 768px) {
+  /* line 87, node_modules/trix/dist/trix.css */
+  trix-toolbar .trix-button--icon::before {
+    right: 6%;
+    left: 6%;
+  }
+}
+
+/* line 90, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button--icon.trix-active::before {
+  opacity: 1;
+}
+
+/* line 92, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button--icon:disabled::before {
+  opacity: 0.125;
+}
+
+/* line 94, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button--icon-attach::before {
+  background-image: url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%3E%3Cpath%20d%3D%22M16.5%206v11.5a4%204%200%201%201-8%200V5a2.5%202.5%200%200%201%205%200v10.5a1%201%200%201%201-2%200V6H10v9.5a2.5%202.5%200%200%200%205%200V5a4%204%200%201%200-8%200v12.5a5.5%205.5%200%200%200%2011%200V6h-1.5z%22%2F%3E%3C%2Fsvg%3E);
+  top: 8%;
+  bottom: 4%;
+}
+
+/* line 98, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button--icon-bold::before {
+  background-image: url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%3E%3Cpath%20d%3D%22M15.6%2011.8c1-.7%201.6-1.8%201.6-2.8a4%204%200%200%200-4-4H7v14h7c2.1%200%203.7-1.7%203.7-3.8%200-1.5-.8-2.8-2.1-3.4zM10%207.5h3a1.5%201.5%200%201%201%200%203h-3v-3zm3.5%209H10v-3h3.5a1.5%201.5%200%201%201%200%203z%22%2F%3E%3C%2Fsvg%3E);
+}
+
+/* line 100, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button--icon-italic::before {
+  background-image: url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%3E%3Cpath%20d%3D%22M10%205v3h2.2l-3.4%208H6v3h8v-3h-2.2l3.4-8H18V5h-8z%22%2F%3E%3C%2Fsvg%3E);
+}
+
+/* line 102, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button--icon-link::before {
+  background-image: url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%3E%3Cpath%20d%3D%22M9.88%2013.7a4.3%204.3%200%200%201%200-6.07l3.37-3.37a4.26%204.26%200%200%201%206.07%200%204.3%204.3%200%200%201%200%206.06l-1.96%201.72a.91.91%200%201%201-1.3-1.3l1.97-1.71a2.46%202.46%200%200%200-3.48-3.48l-3.38%203.37a2.46%202.46%200%200%200%200%203.48.91.91%200%201%201-1.3%201.3z%22%2F%3E%3Cpath%20d%3D%22M4.25%2019.46a4.3%204.3%200%200%201%200-6.07l1.93-1.9a.91.91%200%201%201%201.3%201.3l-1.93%201.9a2.46%202.46%200%200%200%203.48%203.48l3.37-3.38c.96-.96.96-2.52%200-3.48a.91.91%200%201%201%201.3-1.3%204.3%204.3%200%200%201%200%206.07l-3.38%203.38a4.26%204.26%200%200%201-6.07%200z%22%2F%3E%3C%2Fsvg%3E);
+}
+
+/* line 104, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button--icon-strike::before {
+  background-image: url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%3E%3Cpath%20d%3D%22M12.73%2014l.28.14c.26.15.45.3.57.44.12.14.18.3.18.5%200%20.3-.15.56-.44.75-.3.2-.76.3-1.39.3A13.52%2013.52%200%200%201%207%2014.95v3.37a10.64%2010.64%200%200%200%204.84.88c1.26%200%202.35-.19%203.28-.56.93-.37%201.64-.9%202.14-1.57s.74-1.45.74-2.32c0-.26-.02-.51-.06-.75h-5.21zm-5.5-4c-.08-.34-.12-.7-.12-1.1%200-1.29.52-2.3%201.58-3.02%201.05-.72%202.5-1.08%204.34-1.08%201.62%200%203.28.34%204.97%201l-1.3%202.93c-1.47-.6-2.73-.9-3.8-.9-.55%200-.96.08-1.2.26-.26.17-.38.38-.38.64%200%20.27.16.52.48.74.17.12.53.3%201.05.53H7.23zM3%2013h18v-2H3v2z%22%2F%3E%3C%2Fsvg%3E);
+}
+
+/* line 106, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button--icon-quote::before {
+  background-image: url(data:image/svg+xml,%3Csvg%20version%3D%221%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%3E%3Cpath%20d%3D%22M6%2017h3l2-4V7H5v6h3zm8%200h3l2-4V7h-6v6h3z%22%2F%3E%3C%2Fsvg%3E);
+}
+
+/* line 108, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button--icon-heading-1::before {
+  background-image: url(data:image/svg+xml,%3Csvg%20version%3D%221%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%3E%3Cpath%20d%3D%22M12%209v3H9v7H6v-7H3V9h9zM8%204h14v3h-6v12h-3V7H8V4z%22%2F%3E%3C%2Fsvg%3E);
+}
+
+/* line 110, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button--icon-code::before {
+  background-image: url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%3E%3Cpath%20d%3D%22M18.2%2012L15%2015.2l1.4%201.4L21%2012l-4.6-4.6L15%208.8l3.2%203.2zM5.8%2012L9%208.8%207.6%207.4%203%2012l4.6%204.6L9%2015.2%205.8%2012z%22%2F%3E%3C%2Fsvg%3E);
+}
+
+/* line 112, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button--icon-bullet-list::before {
+  background-image: url(data:image/svg+xml,%3Csvg%20version%3D%221%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%3E%3Cpath%20d%3D%22M4%204a2%202%200%201%200%200%204%202%202%200%200%200%200-4zm0%206a2%202%200%201%200%200%204%202%202%200%200%200%200-4zm0%206a2%202%200%201%200%200%204%202%202%200%200%200%200-4zm4%203h14v-2H8v2zm0-6h14v-2H8v2zm0-8v2h14V5H8z%22%2F%3E%3C%2Fsvg%3E);
+}
+
+/* line 114, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button--icon-number-list::before {
+  background-image: url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%3E%3Cpath%20d%3D%22M2%2017h2v.5H3v1h1v.5H2v1h3v-4H2v1zm1-9h1V4H2v1h1v3zm-1%203h1.8L2%2013.1v.9h3v-1H3.2L5%2010.9V10H2v1zm5-6v2h14V5H7zm0%2014h14v-2H7v2zm0-6h14v-2H7v2z%22%2F%3E%3C%2Fsvg%3E);
+}
+
+/* line 116, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button--icon-undo::before {
+  background-image: url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%3E%3Cpath%20d%3D%22M12.5%208c-2.6%200-5%201-6.9%202.6L2%207v9h9l-3.6-3.6A8%208%200%200%201%2020%2016l2.4-.8a10.5%2010.5%200%200%200-10-7.2z%22%2F%3E%3C%2Fsvg%3E);
+}
+
+/* line 118, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button--icon-redo::before {
+  background-image: url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%3E%3Cpath%20d%3D%22M18.4%2010.6a10.5%2010.5%200%200%200-16.9%204.6L4%2016a8%208%200%200%201%2012.7-3.6L13%2016h9V7l-3.6%203.6z%22%2F%3E%3C%2Fsvg%3E);
+}
+
+/* line 120, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button--icon-decrease-nesting-level::before {
+  background-image: url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%3E%3Cpath%20d%3D%22M3%2019h19v-2H3v2zm7-6h12v-2H10v2zm-8.3-.3l2.8%202.9L6%2014.2%204%2012l2-2-1.4-1.5L1%2012l.7.7zM3%205v2h19V5H3z%22%2F%3E%3C%2Fsvg%3E);
+}
+
+/* line 122, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button--icon-increase-nesting-level::before {
+  background-image: url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%3E%3Cpath%20d%3D%22M3%2019h19v-2H3v2zm7-6h12v-2H10v2zm-6.9-1L1%2014.2l1.4%201.4L6%2012l-.7-.7-2.8-2.8L1%209.9%203.1%2012zM3%205v2h19V5H3z%22%2F%3E%3C%2Fsvg%3E);
+}
+
+/* line 124, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-dialogs {
+  position: relative;
+}
+
+/* line 126, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-dialog {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  font-size: 0.75em;
+  padding: 15px 10px;
+  background: #fff;
+  box-shadow: 0 0.3em 1em #ccc;
+  border-top: 2px solid #888;
+  border-radius: 5px;
+  z-index: 5;
+}
+
+/* line 138, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-input--dialog {
+  font-size: inherit;
+  font-weight: normal;
+  padding: 0.5em 0.8em;
+  margin: 0 10px 0 0;
+  border-radius: 3px;
+  border: 1px solid #bbb;
+  background-color: #fff;
+  box-shadow: none;
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* line 150, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-input--dialog.validate:invalid {
+  box-shadow: #F00 0px 0px 1.5px 1px;
+}
+
+/* line 152, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-button--dialog {
+  font-size: inherit;
+  padding: 0.5em;
+  border-bottom: none;
+}
+
+/* line 156, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-dialog--link {
+  max-width: 600px;
+}
+
+/* line 158, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-dialog__link-fields {
+  display: flex;
+  align-items: baseline;
+}
+
+/* line 161, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-dialog__link-fields .trix-input {
+  flex: 1;
+}
+
+/* line 163, node_modules/trix/dist/trix.css */
+trix-toolbar .trix-dialog__link-fields .trix-button-group {
+  flex: 0 0 content;
+  margin: 0;
+}
+
+/* line 166, node_modules/trix/dist/trix.css */
+trix-editor [data-trix-mutable]:not(.attachment__caption-editor) {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* line 172, node_modules/trix/dist/trix.css */
+trix-editor [data-trix-mutable]::-moz-selection,
+trix-editor [data-trix-cursor-target]::-moz-selection, trix-editor [data-trix-mutable] ::-moz-selection {
+  background: none;
+}
+
+/* line 175, node_modules/trix/dist/trix.css */
+trix-editor [data-trix-mutable]::selection,
+trix-editor [data-trix-cursor-target]::selection, trix-editor [data-trix-mutable] ::selection {
+  background: none;
+}
+
+/* line 179, node_modules/trix/dist/trix.css */
+trix-editor .attachment__caption-editor[data-trix-mutable]:focus::-moz-selection {
+  background: highlight;
+}
+
+/* line 181, node_modules/trix/dist/trix.css */
+trix-editor .attachment__caption-editor[data-trix-mutable]:focus::selection {
+  background: highlight;
+}
+
+/* line 184, node_modules/trix/dist/trix.css */
+trix-editor .attachment.attachment--file[data-trix-mutable] {
+  box-shadow: 0 0 0 2px highlight;
+  border-color: transparent;
+}
+
+/* line 187, node_modules/trix/dist/trix.css */
+trix-editor .attachment[data-trix-mutable] img {
+  box-shadow: 0 0 0 2px highlight;
+}
+
+/* line 189, node_modules/trix/dist/trix.css */
+trix-editor .attachment {
+  position: relative;
+}
+
+/* line 191, node_modules/trix/dist/trix.css */
+trix-editor .attachment:hover {
+  cursor: default;
+}
+
+/* line 193, node_modules/trix/dist/trix.css */
+trix-editor .attachment--preview .attachment__caption:hover {
+  cursor: text;
+}
+
+/* line 195, node_modules/trix/dist/trix.css */
+trix-editor .attachment__progress {
+  position: absolute;
+  z-index: 1;
+  height: 20px;
+  top: calc(50% - 10px);
+  left: 5%;
+  width: 90%;
+  opacity: 0.9;
+  transition: opacity 200ms ease-in;
+}
+
+/* line 204, node_modules/trix/dist/trix.css */
+trix-editor .attachment__progress[value="100"] {
+  opacity: 0;
+}
+
+/* line 206, node_modules/trix/dist/trix.css */
+trix-editor .attachment__caption-editor {
+  display: inline-block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
+  line-height: inherit;
+  color: inherit;
+  text-align: center;
+  vertical-align: top;
+  border: none;
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* line 221, node_modules/trix/dist/trix.css */
+trix-editor .attachment__toolbar {
+  position: absolute;
+  z-index: 1;
+  top: -0.9em;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+
+/* line 228, node_modules/trix/dist/trix.css */
+trix-editor .trix-button-group {
+  display: inline-flex;
+}
+
+/* line 230, node_modules/trix/dist/trix.css */
+trix-editor .trix-button {
+  position: relative;
+  float: left;
+  color: #666;
+  white-space: nowrap;
+  font-size: 80%;
+  padding: 0 0.8em;
+  margin: 0;
+  outline: none;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+
+/* line 242, node_modules/trix/dist/trix.css */
+trix-editor .trix-button:not(:first-child) {
+  border-left: 1px solid #ccc;
+}
+
+/* line 244, node_modules/trix/dist/trix.css */
+trix-editor .trix-button.trix-active {
+  background: #cbeefa;
+}
+
+/* line 246, node_modules/trix/dist/trix.css */
+trix-editor .trix-button:not(:disabled) {
+  cursor: pointer;
+}
+
+/* line 248, node_modules/trix/dist/trix.css */
+trix-editor .trix-button--remove {
+  text-indent: -9999px;
+  display: inline-block;
+  padding: 0;
+  outline: none;
+  width: 1.8em;
+  height: 1.8em;
+  line-height: 1.8em;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 2px solid highlight;
+  box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.25);
+}
+
+/* line 260, node_modules/trix/dist/trix.css */
+trix-editor .trix-button--remove::before {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0.7;
+  content: "";
+  background-image: url(data:image/svg+xml,%3Csvg%20height%3D%2224%22%20width%3D%2224%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M19%206.4L17.6%205%2012%2010.6%206.4%205%205%206.4l5.6%205.6L5%2017.6%206.4%2019l5.6-5.6%205.6%205.6%201.4-1.4-5.6-5.6z%22%2F%3E%3Cpath%20d%3D%22M0%200h24v24H0z%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 90%;
+}
+
+/* line 273, node_modules/trix/dist/trix.css */
+trix-editor .trix-button--remove:hover {
+  border-color: #333;
+}
+
+/* line 275, node_modules/trix/dist/trix.css */
+trix-editor .trix-button--remove:hover::before {
+  opacity: 1;
+}
+
+/* line 277, node_modules/trix/dist/trix.css */
+trix-editor .attachment__metadata-container {
+  position: relative;
+}
+
+/* line 279, node_modules/trix/dist/trix.css */
+trix-editor .attachment__metadata {
+  position: absolute;
+  left: 50%;
+  top: 2em;
+  transform: translate(-50%, 0);
+  max-width: 90%;
+  padding: 0.1em 0.6em;
+  font-size: 0.8em;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 3px;
+}
+
+/* line 290, node_modules/trix/dist/trix.css */
+trix-editor .attachment__metadata .attachment__name {
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: bottom;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* line 297, node_modules/trix/dist/trix.css */
+trix-editor .attachment__metadata .attachment__size {
+  margin-left: 0.2em;
+  white-space: nowrap;
+}
+
+/* line 301, node_modules/trix/dist/trix.css */
+.trix-content {
+  line-height: 1.5;
+}
+
+/* line 303, node_modules/trix/dist/trix.css */
+.trix-content * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* line 307, node_modules/trix/dist/trix.css */
+.trix-content h1 {
+  font-size: 1.2em;
+  line-height: 1.2;
+}
+
+/* line 310, node_modules/trix/dist/trix.css */
+.trix-content blockquote {
+  border: 0 solid #ccc;
+  border-left-width: 0.3em;
+  margin-left: 0.3em;
+  padding-left: 0.6em;
+}
+
+/* line 315, node_modules/trix/dist/trix.css */
+.trix-content [dir=rtl] blockquote,
+.trix-content blockquote[dir=rtl] {
+  border-width: 0;
+  border-right-width: 0.3em;
+  margin-right: 0.3em;
+  padding-right: 0.6em;
+}
+
+/* line 321, node_modules/trix/dist/trix.css */
+.trix-content li {
+  margin-left: 1em;
+}
+
+/* line 323, node_modules/trix/dist/trix.css */
+.trix-content [dir=rtl] li {
+  margin-right: 1em;
+}
+
+/* line 325, node_modules/trix/dist/trix.css */
+.trix-content pre {
+  display: inline-block;
+  width: 100%;
+  vertical-align: top;
+  font-family: monospace;
+  font-size: 0.9em;
+  padding: 0.5em;
+  white-space: pre;
+  background-color: #eee;
+  overflow-x: auto;
+}
+
+/* line 335, node_modules/trix/dist/trix.css */
+.trix-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* line 338, node_modules/trix/dist/trix.css */
+.trix-content .attachment {
+  display: inline-block;
+  position: relative;
+  max-width: 100%;
+}
+
+/* line 342, node_modules/trix/dist/trix.css */
+.trix-content .attachment a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* line 345, node_modules/trix/dist/trix.css */
+.trix-content .attachment a:hover, .trix-content .attachment a:visited:hover {
+  color: inherit;
+}
+
+/* line 347, node_modules/trix/dist/trix.css */
+.trix-content .attachment__caption {
+  text-align: center;
+}
+
+/* line 349, node_modules/trix/dist/trix.css */
+.trix-content .attachment__caption .attachment__name + .attachment__size::before {
+  content: ' · ';
+}
+
+/* line 351, node_modules/trix/dist/trix.css */
+.trix-content .attachment--preview {
+  width: 100%;
+  text-align: center;
+}
+
+/* line 354, node_modules/trix/dist/trix.css */
+.trix-content .attachment--preview .attachment__caption {
+  color: #666;
+  font-size: 0.9em;
+  line-height: 1.2;
+}
+
+/* line 358, node_modules/trix/dist/trix.css */
+.trix-content .attachment--file {
+  color: #333;
+  line-height: 1;
+  margin: 0 2px 2px 2px;
+  padding: 0.4em 1em;
+  border: 1px solid #bbb;
+  border-radius: 5px;
+}
+
+/* line 365, node_modules/trix/dist/trix.css */
+.trix-content .attachment-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+/* line 369, node_modules/trix/dist/trix.css */
+.trix-content .attachment-gallery .attachment {
+  flex: 1 0 33%;
+  padding: 0 0.5em;
+  max-width: 33%;
+}
+
+/* line 373, node_modules/trix/dist/trix.css */
+.trix-content .attachment-gallery.attachment-gallery--2 .attachment, .trix-content .attachment-gallery.attachment-gallery--4 .attachment {
+  flex-basis: 50%;
+  max-width: 50%;
+}
+
+/* line 15, app/assets/stylesheets/actiontext.scss */
+.trix-content .attachment-gallery > action-text-attachment,
+.trix-content .attachment-gallery > .attachment {
+  flex: 1 0 33%;
+  padding: 0 0.5em;
+  max-width: 33%;
+}
+
+/* line 24, app/assets/stylesheets/actiontext.scss */
+.trix-content .attachment-gallery.attachment-gallery--2 > action-text-attachment,
+.trix-content .attachment-gallery.attachment-gallery--2 > .attachment, .trix-content .attachment-gallery.attachment-gallery--4 > action-text-attachment,
+.trix-content .attachment-gallery.attachment-gallery--4 > .attachment {
+  flex-basis: 50%;
+  max-width: 50%;
+}
+
+/* line 33, app/assets/stylesheets/actiontext.scss */
+.trix-content action-text-attachment .attachment {
+  padding: 0 !important;
+  max-width: 100% !important;
+}
+
+/* Flatpickr custom theme to match Woofed CRM design */
+/* line 3, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-calendar {
+  font-family: "Nunito", sans-serif;
+  background: #ffffff;
+  border: 1px solid #e7e6ef;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(23, 22, 30, 0.1);
+  padding: 0;
+  width: auto;
+  min-width: 320px;
+}
+
+/* line 14, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-calendar.showTimeInput.hasTime .flatpickr-time {
+  border-top: 1px solid #e7e6ef;
+}
+
+/* line 19, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-calendar.multiMonth {
+  width: auto;
+}
+
+/* line 24, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-months {
+  padding: 12px 8px 8px;
+}
+
+/* line 27, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-months .flatpickr-month {
+  height: 36px;
+}
+
+/* line 31, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-months .flatpickr-prev-month,
+.flatpickr-months .flatpickr-next-month {
+  padding: 8px;
+  fill: #605e70;
+  transition: all 0.2s ease;
+}
+
+/* line 37, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-months .flatpickr-prev-month:hover,
+.flatpickr-months .flatpickr-next-month:hover {
+  fill: #6857d9;
+}
+
+/* line 40, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-months .flatpickr-prev-month:hover svg,
+.flatpickr-months .flatpickr-next-month:hover svg {
+  fill: #6857d9;
+}
+
+/* line 45, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-months .flatpickr-prev-month svg,
+.flatpickr-months .flatpickr-next-month svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* line 51, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-months .flatpickr-current-month {
+  font-size: 14px;
+  font-weight: 600;
+  color: #17161e;
+  padding-top: 4px;
+}
+
+/* line 57, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-months .flatpickr-current-month .cur-month {
+  font-weight: 600;
+}
+
+/* line 61, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-months .flatpickr-current-month .numInputWrapper {
+  width: 60px;
+}
+
+/* line 64, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-months .flatpickr-current-month .numInputWrapper input.cur-year {
+  font-weight: 600;
+  color: #17161e;
+}
+
+/* line 69, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-months .flatpickr-current-month .numInputWrapper span {
+  border-color: #888599;
+}
+
+/* line 72, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-months .flatpickr-current-month .numInputWrapper span:hover {
+  background: #edf1fd;
+}
+
+/* line 80, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-weekdays {
+  background: #faf9fd;
+  border-bottom: 1px solid #e7e6ef;
+  padding: 8px 0;
+}
+
+/* line 86, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-weekday {
+  font-size: 12px;
+  font-weight: 600;
+  color: #888599;
+  text-transform: uppercase;
+}
+
+/* line 93, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-days {
+  padding: 8px;
+}
+
+/* line 96, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-days .dayContainer {
+  min-width: 280px;
+  max-width: 280px;
+}
+
+/* line 102, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-day {
+  font-size: 13px;
+  font-weight: 500;
+  color: #3a3847;
+  border-radius: 6px;
+  height: 36px;
+  line-height: 36px;
+  max-width: 36px;
+  margin: 2px;
+  transition: all 0.15s ease;
+}
+
+/* line 113, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-day:hover {
+  background: #edf1fd;
+  border-color: #edf1fd;
+  color: #6857d9;
+}
+
+/* line 119, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-day.today {
+  border-color: #6857d9;
+  color: #6857d9;
+  font-weight: 700;
+}
+
+/* line 124, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-day.today:hover {
+  background: #6857d9;
+  color: #ffffff;
+}
+
+/* line 130, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange {
+  background: #6857d9 !important;
+  border-color: #6857d9 !important;
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+/* line 138, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-day.selected:hover, .flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover {
+  background: #8686e8 !important;
+  border-color: #8686e8 !important;
+}
+
+/* line 144, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-day.inRange {
+  background: #edf1fd;
+  border-color: #edf1fd;
+  color: #6857d9;
+  box-shadow: -5px 0 0 #edf1fd, 5px 0 0 #edf1fd;
+}
+
+/* line 151, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-day.prevMonthDay, .flatpickr-day.nextMonthDay {
+  color: #cbc8db;
+}
+
+/* line 155, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-day.prevMonthDay:hover, .flatpickr-day.nextMonthDay:hover {
+  background: #f2f1f7;
+  border-color: #f2f1f7;
+  color: #888599;
+}
+
+/* line 162, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-day.disabled, .flatpickr-day.disabled:hover {
+  color: #e7e6ef;
+  background: transparent;
+  cursor: not-allowed;
+}
+
+/* line 169, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-day.week.selected {
+  border-radius: 0;
+  box-shadow: -5px 0 0 #6857d9, 5px 0 0 #6857d9;
+}
+
+/* line 175, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-time {
+  padding: 12px;
+  background: #faf9fd;
+  border-radius: 0 0 8px 8px;
+}
+
+/* line 180, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-time .numInputWrapper {
+  height: 36px;
+  background: #ffffff;
+  border: 1px solid #e7e6ef;
+  border-radius: 6px;
+}
+
+/* line 186, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-time .numInputWrapper input {
+  font-size: 14px;
+  font-weight: 500;
+  color: #3a3847;
+}
+
+/* line 192, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-time .numInputWrapper span {
+  border-color: #cbc8db;
+}
+
+/* line 195, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-time .numInputWrapper span:hover {
+  background: #edf1fd;
+}
+
+/* line 199, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-time .numInputWrapper span.arrowUp:after {
+  border-bottom-color: #605e70;
+}
+
+/* line 203, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-time .numInputWrapper span.arrowDown:after {
+  border-top-color: #605e70;
+}
+
+/* line 209, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-time .flatpickr-time-separator,
+.flatpickr-time .flatpickr-am-pm {
+  color: #605e70;
+  font-weight: 500;
+}
+
+/* line 215, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-time .flatpickr-am-pm {
+  background: #ffffff;
+  border: 1px solid #e7e6ef;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+/* line 221, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-time .flatpickr-am-pm:hover {
+  background: #edf1fd;
+  color: #6857d9;
+}
+
+/* Input styling */
+/* line 229, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-input {
+  font-family: "Nunito", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #3a3847;
+  background: #faf9fd;
+  border: 1.5px solid #e7e6ef;
+  border-radius: 6px;
+  padding: 8px 12px;
+  transition: all 0.2s ease;
+}
+
+/* line 240, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-input:hover {
+  border-color: #cbc8db;
+}
+
+/* line 244, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-input:focus {
+  outline: none;
+  border-color: #6857d9;
+  box-shadow: 0 0 0 3px rgba(104, 87, 217, 0.1);
+}
+
+/* line 250, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-input::placeholder {
+  color: #b1aec2;
+}
+
+/* Quick select buttons panel */
+/* line 256, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-quick-select {
+  background: #faf9fd;
+  border-radius: 0 0 8px 8px;
+}
+
+/* line 260, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-quick-select button {
+  font-family: "Nunito", sans-serif;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+/* line 266, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-quick-select button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(104, 87, 217, 0.2);
+}
+
+/* Range mode specific styles */
+/* line 276, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-calendar.rangeMode .flatpickr-day.startRange {
+  border-radius: 6px 0 0 6px;
+}
+
+/* line 280, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-calendar.rangeMode .flatpickr-day.endRange {
+  border-radius: 0 6px 6px 0;
+}
+
+/* line 284, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-calendar.rangeMode .flatpickr-day.startRange.endRange {
+  border-radius: 6px;
+}
+
+/* Animation */
+/* line 291, app/assets/stylesheets/flatpickr-custom.scss */
+.flatpickr-calendar.animate.open {
+  animation: flatpickrFadeIn 0.2s ease-out;
+}
+
+@keyframes flatpickrFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* line 1, app/assets/stylesheets/fullcalendar.scss */
+:root {
+  --fc-small-font-size: 0.85em;
+  --fc-page-bg-color: #fff;
+  --fc-neutral-bg-color: #FAF9FD;
+  --fc-neutral-text-color: #808080;
+  --fc-border-color: #F2F1F7;
+  /* Button variables */
+  --fc-button-text-color: #888599;
+  --fc-button-bg-color: #FAF9FD;
+  --fc-button-border-color: transparent;
+  --fc-button-border-width: 1.5px;
+  --fc-button-border-radius: 0.25rem;
+  --fc-button-hover-text-color: #6857D9;
+  --fc-button-hover-bg-color: #F6F8FE;
+  --fc-button-hover-border-color: #D9DEFF;
+  --fc-button-active-text-color: #6857D9;
+  --fc-button-active-bg-color: #F6F8FE;
+  --fc-button-active-border-color: #D9DEFF;
+  /* Event variables */
+  --fc-event-bg-color: #3788d8;
+  --fc-event-border-color: #3788d8;
+  --fc-event-text-color: #fff;
+  --fc-event-selected-overlay-color: rgba(0, 0, 0, 0.25);
+  --fc-more-link-bg-color: #d0d0d0;
+  --fc-more-link-text-color: inherit;
+  --fc-event-resizer-thickness: 8px;
+  --fc-event-resizer-dot-total-width: 8px;
+  --fc-event-resizer-dot-border-width: 1px;
+  /* Misc */
+  --fc-non-business-color: rgba(215, 215, 215, 0.3);
+  --fc-bg-event-color: rgb(143, 223, 130);
+  --fc-bg-event-opacity: 0.3;
+  --fc-highlight-color: rgba(188, 232, 241, 0.3);
+  --fc-today-bg-color: #F6F8FE;
+  --fc-now-indicator-color: red;
+  --fc-list-event-hover-bg-color: #f5f5f5;
+}
+
+/* =======================
+   BUTTONS
+========================= */
+/* line 51, app/assets/stylesheets/fullcalendar.scss */
+.fc .fc-button-primary {
+  border-style: solid;
+  border-radius: var(--fc-button-border-radius);
+}
+
+/* line 56, app/assets/stylesheets/fullcalendar.scss */
+.fc .fc-button-primary.fc-button-active:not(:disabled) {
+  color: var(--fc-button-active-text-color);
+  background-color: var(--fc-button-active-bg-color);
+  border-color: var(--fc-button-active-border-color);
+}
+
+/* line 62, app/assets/stylesheets/fullcalendar.scss */
+.fc .fc-button-primary:focus,
+.fc .fc-button-primary:active:focus,
+.fc .fc-button-primary.fc-button-active:focus,
+.fc .fc-button:focus,
+.fc .fc-button:active:focus {
+  border-color: var(--fc-button-active-border-color) !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* line 72, app/assets/stylesheets/fullcalendar.scss */
+.fc .fc-button-group {
+  gap: 0.5rem;
+}
+
+/* line 76, app/assets/stylesheets/fullcalendar.scss */
+.fc-direction-ltr .fc-button-group > .fc-button {
+  border-radius: var(--fc-button-border-radius) !important;
+}
+
+/* =======================
+   TITLES & TEXT
+========================= */
+/* line 84, app/assets/stylesheets/fullcalendar.scss */
+.fc-toolbar-title {
+  font-weight: 600;
+  color: #605E70;
+  font-size: 1.375rem !important;
+}
+
+/* line 90, app/assets/stylesheets/fullcalendar.scss */
+.fc-event-title {
+  font-weight: 600;
+}
+
+/* line 94, app/assets/stylesheets/fullcalendar.scss */
+.fc-daygrid-day-number {
+  color: #888599;
+}
+
+/* line 98, app/assets/stylesheets/fullcalendar.scss */
+.fc .fc-list-empty-cushion {
+  color: #605E70;
+  font-weight: 600;
+}
+
+/* =======================
+   EVENTS
+========================= */
+/* line 108, app/assets/stylesheets/fullcalendar.scss */
+.fc .fc-daygrid-dot-event .fc-event-title {
+  color: #888599;
+}
+
+/* line 112, app/assets/stylesheets/fullcalendar.scss */
+.fc .fc-daygrid-dot-event .fc-event-title:hover {
+  color: #605E70;
+}
+
+/* line 116, app/assets/stylesheets/fullcalendar.scss */
+.fc .fc-daygrid-dot-event .fc-event-time {
+  color: #605E70;
+}
+
+/* List-style events */
+/* line 121, app/assets/stylesheets/fullcalendar.scss */
+.fc .fc-list-event td {
+  color: #737185 !important;
+}
+
+/* line 125, app/assets/stylesheets/fullcalendar.scss */
+.fc .fc-list-event:hover td {
+  color: #605E70 !important;
+}
+
+/* line 130, app/assets/stylesheets/fullcalendar.scss */
+.fc .fc-daygrid-dot-event:hover {
+  background-color: #F2F1F7 !important;
+}
+
+/* line 134, app/assets/stylesheets/fullcalendar.scss */
+.fc .fc-timegrid-event:hover,
+.fc .fc-daygrid-block-event:hover {
+  filter: brightness(95%);
+}
+
+/* =======================
+   HEADERS & LABELS
+========================= */
+/* line 143, app/assets/stylesheets/fullcalendar.scss */
+.fc .fc-col-header-cell-cushion,
+.fc .fc-timegrid-axis-cushion,
+.fc .fc-timegrid-slot-label-cushion {
+  color: #888599;
+  font-weight: 600;
+}
+
+/* line 150, app/assets/stylesheets/fullcalendar.scss */
+.fc a[data-navlink] {
+  color: #888599;
+}
+
+/* List view day header */
+/* line 155, app/assets/stylesheets/fullcalendar.scss */
+.fc .fc-list-day-cushion {
+  background-color: #FAF9FD;
+  color: #605E70;
+}
+
+/* line 160, app/assets/stylesheets/fullcalendar.scss */
+.fc-theme-standard .fc-scrollgrid {
+  border-radius: .25rem !important;
+  border-width: 1.5px;
+}
+
+/* line 1, app/assets/stylesheets/stages_nav.scss */
+.stage-bar a:first-of-type {
+  border-bottom-left-radius: 0.5rem;
+  border-top-left-radius: 0.5rem;
+}
+
+/* line 7, app/assets/stylesheets/stages_nav.scss */
+.stage-bar a:first-of-type p {
+  padding-left: .625rem;
+}
+
+/* line 12, app/assets/stylesheets/stages_nav.scss */
+.stage-bar a:last-of-type {
+  border-bottom-right-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+/* line 1, app/assets/stylesheets/commons/w-btn-block.scss */
+.w-btn-block {
+  color: #888599 !important;
+  border-radius: 5px;
+  border: 1.8px solid #F2F1F7;
+  padding: 10px !important;
+}
+
+/* line 6, app/assets/stylesheets/commons/w-btn-block.scss */
+.w-btn-block i {
+  font-size: 15px !important;
+  margin: 0px !important;
+}
+
+/* line 1, app/assets/stylesheets/commons/w-btn-outline.scss */
+.w-btn-outline {
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 30px;
+  padding: 0.3rem 0.8rem;
+  letter-spacing: .5px;
+  color: #6857D9;
+  background-color: #FFFFFF;
+  border: 1.5px solid #F2F1F7;
+  border-radius: 5px;
+}
+
+/* line 14, app/assets/stylesheets/commons/w-btn-outline.scss */
+.w-btn-outline:hover {
+  border-radius: 5px;
+  border: 1.5px solid #D9DEFF;
+}

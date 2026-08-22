@@ -1,0 +1,21 @@
+{
+  "name": "woofed-crm",
+  "baseName": "base-3.3-r3",
+  "kernel": "https://pinfada.github.io/railsbox-assets/base-3.3-r3/base-3.3-r3-vmlinuz",
+  "initrd": "https://pinfada.github.io/railsbox-assets/base-3.3-r3/base-3.3-r3-initrd",
+  "disk": "https://pinfada.github.io/railsbox-assets/base-3.3-r3/base-3.3-r3.ext2.zst",
+  "diskSize": 1922039808,
+  "appDisk": "disks/woofed-crm-app-5118aa8dd5a2.ext2.zst",
+  "appDiskSize": 536870912,
+  "cmdline": "root=/dev/sda rw console=ttyS0 init=/opt/rib/guest-init.sh net.ifnames=0 quiet loglevel=4",
+  "memoryMb": 1024,
+  "mountPath": "/woofed-crm/app",
+  "database": "postgresql",
+  "builtAt": "2026-08-22T22:23:07Z",
+  "diskChunkSize": 4194304,
+  "appDiskChunkSize": 4194304,
+  "state": "disks/woofed-crm-split-state-e08ec9ce6f2d.bin.gz",
+  "stateFor": "2026-08-22T22:23:07Z",
+  "stateForAppDiskSha256": "5118aa8dd5a2edde7d02bf682c4dceeb86cc3cd8d46ac96716d8cdcf74091ac4",
+  "appDiskSha256": "5118aa8dd5a2edde7d02bf682c4dceeb86cc3cd8d46ac96716d8cdcf74091ac4"
+}
