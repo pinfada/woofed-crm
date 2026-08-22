@@ -1,0 +1,35 @@
+name: Sandbox railsbox
+
+# Démonstration railsbox de Woofed CRM, jouable dans le navigateur, sans
+# serveur. La branche `railsbox-demo` part du commit 826ebd1f et n'ajoute que
+# deux fichiers : ce workflow et `railsbox.yml`.
+
+on:
+  push:
+    branches: [railsbox-demo]
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Publier sur gh-pages (sinon construction seule)"
+        type: boolean
+        default: false
+
+jobs:
+  sandbox:
+    uses: pinfada/railsbox/.github/workflows/construire-sandbox.yml@main
+    permissions:
+      contents: write
+    with:
+      # BASE 3.3-r3 EXPLICITE, et c'est indispensable.
+      #
+      # Le défaut du workflow vaut 3.3-r2, délibérément : r3 pèse 33 Mo de plus
+      # pour chaque visiteur, et ce coût ne doit tomber que sur les
+      # applications qui en tirent quelque chose. Woofed en est une — sa
+      # migration `add_pg_vector_extension` exige pgvector, que seule r3
+      # fournit. Sans cette ligne, la construction échouerait sur
+      # « extension "vector" is not available », après plusieurs minutes.
+      base: "3.3-r3"
+      # Une poussée CONSTRUIT sans publier ; seul un lancement manuel demandant
+      # explicitement la publication publie. La comparaison rend toujours un
+      # booléen, y compris sur `push` où le contexte `inputs` est vide.
+      publish: ${{ inputs.publish == true }}

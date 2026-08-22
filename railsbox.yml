@@ -1,0 +1,68 @@
+# Sandbox railsbox — Woofed CRM (commit 826ebd1f9e93)
+#
+# Chaque clé ci-dessous répond à un fait MESURÉ le 21/08/2026 dans l'image i386
+# réelle, jamais à une supposition. Aucun code applicatif n'est modifié.
+
+database: postgresql
+# La base `ai_agent` n'a ni migrations (db/ai_agent_migrate absent) ni schéma
+# (db/ai_agent_schema.rb absent), et n'est dispensée de `database_tasks` qu'en
+# développement — pas en production, où railsbox exécute l'application.
+database_prepare: migrate
+
+seed:
+  command: "bin/rails db:seed"
+  # Compte créé par db/seeds.rb. Vérifié : 3 utilisateurs, 15 contacts,
+  # 15 affaires, pipeline « Sales » à 5 étapes.
+  auto_login: "user1@email.com"
+
+env:
+  # Ouvre le bloc de démonstration des seeds. Suppose la PR amont : la garde
+  # actuelle est `Rails.env.development?` seule.
+  DEMO_SEED: "1"
+  # EXIGÉE par une migration : « FRONTEND_URL is required to mint MCP tokens
+  # during migration » (20260601205859_backfill_woofed_ai_tokens_for_users).
+  # Sans elle, db:migrate s'arrête à la dernière migration.
+  FRONTEND_URL: "http://localhost:8080"
+  # Ceinture et bretelles : l'adaptateur ActiveJob est déjà `:async` en
+  # production (queue_adapter non fixé), donc GoodJob n'ordonnance rien et les
+  # trois tâches cron de l'initialiseur ne se déclenchent jamais.
+  GOOD_JOB_EXECUTION_MODE: "external"
+  REDIS_URL: "redis://localhost:6379/0"
+  # Seconde base, sur le PostgreSQL local de la sandbox.
+  AI_AGENT_DATABASE_URL: "postgres://postgres@localhost/woofed_ai_production"
+  ENABLE_USER_SIGNUP: "false"
+  LANGUAGE: "en"
+  DEFAULT_TIMEZONE: "UTC"
+  # Le tableau de pipeline charge ses CINQ colonnes en turbo-frames parallèles.
+  # Avec le défaut de 5, le pool PostgreSQL — que config/database.yml dérive de
+  # cette même variable — était saturé au démarrage à froid : une colonne
+  # tombait en ActiveRecord::ConnectionTimeoutError et restait « Content
+  # missing ». Constaté dans Chrome le 22/08/2026. Réglage propre à cette
+  # application, pas un correctif railsbox.
+  RAILS_MAX_THREADS: "10"
+
+assets:
+  # Le script npm « build » de Woofed vaut littéralement `yarn install` — un
+  # vestige Heroku, pas une construction d'assets. Vite est branché sur
+  # `assets:precompile` par vite_rails. Liste VIDE = aucun script npm lancé
+  # (la clé remplace la détection, elle ne la complète pas).
+  scripts: []
+  # LA SEULE dépendance node_modules exigée à l'EXÉCUTION : une unique
+  # directive `@import "trix/dist/trix"` dans app/assets/stylesheets/
+  # actiontext.scss, et `config.assets.compile` vaut `true` en production.
+  # 0,45 Mo. Sans elle : 500 sur /users/sign_in. Avec : 200, jeton CSRF rendu,
+  # zéro erreur serveur. Embarquer node_modules entier coûterait 431 Mo.
+  output: [node_modules/trix]
+
+# Ce que la base 3.3-r3 ne porte PAS. Elle fournit déjà imagemagick et
+# libvips42 ; les redéclarer ne ferait que les relocaliser inutilement sur le
+# disque applicatif.
+#
+# `libvips-dev` en particulier est REFUSÉ par la doctrine de la base (+170 Mo)
+# et il est inutile : ruby-vips est une liaison FFI, elle ouvre libvips.so.42 et
+# ne compile aucun en-tête. Le déclarer avait gonflé la surcouche à 230 Mo.
+system_packages: [libsass-dev]
+
+# Hors périmètre d'une démonstration : side-car Python, suites de tests,
+# documentation, fichiers Docker.
+exclude: [ai-agent, spec, test, docs, docker, testing.csv]
