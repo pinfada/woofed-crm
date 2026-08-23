@@ -1,6 +1,6 @@
 
 ![Logo](.github/logo.png)
-
+[![Try with railsbox](https://pinfada.github.io/woofed-crm/badge.svg)](https://pinfada.github.io/woofed-crm/)
 
 Woofed CRM is a Open source CRM Software. 
 
